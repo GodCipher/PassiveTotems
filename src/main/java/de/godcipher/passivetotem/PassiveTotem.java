@@ -1,11 +1,13 @@
 package de.godcipher.passivetotem;
 
+import de.godcipher.passivetotem.listener.TotemStatsListener;
 import de.godcipher.passivetotem.scheduler.TotemPassiveStatsScheduler;
 import de.godcipher.passivetotem.stat.StatType;
 import de.godcipher.passivetotem.stat.TotemStats;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,14 +18,20 @@ public final class PassiveTotem extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    setupBStats();
     loadConfig();
     generateConfig();
     updateTotemStats();
     runScheduler();
+    registerListener();
   }
 
   @Override
   public void onDisable() {}
+
+  private void registerListener() {
+    getServer().getPluginManager().registerEvents(new TotemStatsListener(totemStats), this);
+  }
 
   private void runScheduler() {
     getServer()
@@ -75,5 +83,9 @@ public final class PassiveTotem extends JavaPlugin {
       int value = getConfig().getInt(key);
       totemStats.setStat(statType, value);
     }
+  }
+
+  private void setupBStats() {
+    new Metrics(this, 22897);
   }
 }

@@ -1,4 +1,4 @@
-name: PassiveTotem
+name: PassiveTotems
 version: '${project.version}'
 main: de.godcipher.passivetotem.PassiveTotem
 api-version: '1.21'
